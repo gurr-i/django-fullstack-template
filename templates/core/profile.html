@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load core_extras %}
 
 {% block title %}{{ SITE_NAME }} - Profile{% endblock %}
 
@@ -156,7 +157,7 @@
                                             <h6 class="mb-1">{{ task.title }}</h6>
                                             <small>{{ task.created_at|date:"M d, Y" }}</small>
                                         </div>
-                                        <small>Status: <span class="badge bg-{{ task.status }}">{{ task.status|title }}</span></small>
+                                        <small>Status: <span class="badge bg-{{ task.status }}">{{ task.status|title|replace:"_," }}</span></small>
                                     </a>
                                 {% endfor %}
                             </div>
@@ -180,7 +181,7 @@
                                             <h6 class="mb-1">{{ task.title }}</h6>
                                             <small>{{ task.created_at|date:"M d, Y" }}</small>
                                         </div>
-                                        <small>Status: <span class="badge bg-{{ task.status }}">{{ task.status|title }}</span></small>
+                                        <small>Status: <span class="badge bg-{{ task.status }}">{{ task.status|title|replace:"_," }}</span></small>
                                     </a>
                                 {% endfor %}
                             </div>

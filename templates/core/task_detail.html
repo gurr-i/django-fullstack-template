@@ -67,8 +67,9 @@
                             <tr>
                                 <th style="width: 150px;">Status</th>
                                 <td>
+                                    {% load core_extras %}
                                     <span id="status-badge-{{ task.id }}" class="badge bg-{% if task.status == 'pending' %}warning{% elif task.status == 'in_progress' %}primary{% elif task.status == 'completed' %}success{% elif task.status == 'cancelled' %}danger{% endif %}">
-                                        {{ task.status|title }}
+                                        {{ task.status|title|replace:"_," }}
                                     </span>
                                 </td>
                             </tr>

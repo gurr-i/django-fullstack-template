@@ -74,7 +74,8 @@
         <div class="col-md-12">
             {% for task in tasks %}
                 <div class="task-card">
-                    <span class="task-status {{ task.status }}">{{ task.status|title }}</span>
+                    {% load core_extras %}
+                    <span class="task-status {{ task.status }}">{{ task.status|title|replace:"_," }}</span>
                     <h2 class="task-title">
                         <a href="{% url 'task-detail' task.id %}">{{ task.title }}</a>
                     </h2>
