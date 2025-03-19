@@ -5,15 +5,15 @@
 {% block content %}
 <div class="row">
     <div class="col-md-6 offset-md-3">
-        <div class="card">
-            <div class="card-header">
-                <h1 class="card-title h3">Create an Account</h1>
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h1 class="card-title h3 mb-0"><i data-feather="user-plus" class="me-2"></i>Create an Account</h1>
             </div>
             <div class="card-body">
                 {% if form.errors %}
                     <div class="alert alert-danger">
-                        <h5 class="alert-heading">Please correct the following errors:</h5>
-                        <ul>
+                        <h5 class="alert-heading"><i data-feather="alert-triangle" class="me-2"></i>Please correct the following errors:</h5>
+                        <ul class="mb-0">
                             {% for field in form %}
                                 {% for error in field.errors %}
                                     <li>{{ field.label }}: {{ error }}</li>
@@ -26,77 +26,156 @@
                     </div>
                 {% endif %}
                 
-                <form method="post">
+                <form method="post" class="needs-validation" novalidate>
                     {% csrf_token %}
                     
                     <div class="mb-3">
                         <label for="id_username" class="form-label">Username</label>
-                        <input type="text" name="username" maxlength="150" class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
-                               id="id_username" placeholder="Choose a username" required {% if form.username.value %}value="{{ form.username.value }}"{% endif %} autofocus>
-                        {% if form.username.help_text %}
-                            <div class="form-text">{{ form.username.help_text }}</div>
-                        {% endif %}
-                        {% if form.username.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.username.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+                        <div class="input-group">
+                            <span class="input-group-text"><i data-feather="user"></i></span>
+                            <input type="text" name="username" maxlength="150" class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
+                                   id="id_username" placeholder="Choose a username" required {% if form.username.value %}value="{{ form.username.value }}"{% endif %} autofocus>
+                            {% if form.username.help_text %}
+                                <div class="form-text">{{ form.username.help_text }}</div>
+                            {% endif %}
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.username.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i data-feather="mail"></i></span>
+                            <input type="email" name="email" class="form-control {% if form.email.errors %}is-invalid{% endif %}" 
+                                   id="id_email" placeholder="Enter your email address" required {% if form.email.value %}value="{{ form.email.value }}"{% endif %}>
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                     
+                    <!-- Password Field -->
                     <div class="mb-3">
                         <label for="id_password1" class="form-label">Password</label>
-                        <input type="password" name="password1" class="form-control {% if form.password1.errors %}is-invalid{% endif %}" 
-                               id="id_password1" placeholder="Enter a strong password" required>
-                        {% if form.password1.help_text %}
-                            <div class="form-text">
-                                <ul>
-                                    {% for help_text in form.password1.help_text %}
-                                        <li>{{ help_text }}</li>
+                        <div class="input-group">
+                            <span class="input-group-text"><i data-feather="lock"></i></span>
+                            <input type="password" name="password1" class="form-control {% if form.password1.errors %}is-invalid{% endif %}" 
+                                   id="id_password1" placeholder="Enter a strong password" required>
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                <i data-feather="eye"></i>
+                            </button>
+                            {% if form.password1.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.password1.errors %}
+                                        {{ error }}
                                     {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
-                        {% if form.password1.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.password1.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                     
-                    <div class="mb-3">
+                    <!-- Confirm Password Field -->
+                    <div class="mb-4">
                         <label for="id_password2" class="form-label">Confirm Password</label>
-                        <input type="password" name="password2" class="form-control {% if form.password2.errors %}is-invalid{% endif %}" 
-                               id="id_password2" placeholder="Confirm your password" required>
-                        {% if form.password2.help_text %}
-                            <div class="form-text">{{ form.password2.help_text }}</div>
-                        {% endif %}
-                        {% if form.password2.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.password2.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+                        <div class="input-group">
+                            <span class="input-group-text"><i data-feather="lock"></i></span>
+                            <input type="password" name="password2" class="form-control {% if form.password2.errors %}is-invalid{% endif %}" 
+                                   id="id_password2" placeholder="Confirm your password" required>
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                <i data-feather="eye"></i>
+                            </button>
+                            {% if form.password2.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.password2.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                     
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">
-                            <i data-feather="user-plus" class="me-1"></i> Register
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i data-feather="user-plus" class="me-2"></i> Create Account
                         </button>
                     </div>
                 </form>
                 
-                <hr>
+                <hr class="my-4">
                 
                 <div class="text-center">
-                    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+                    <p class="mb-0">Already have an account? <a href="{% url 'login' %}" class="text-primary">Login here</a></p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Toggle password visibility
+    document.getElementById('togglePassword1').addEventListener('click', function() {
+        const password = document.getElementById('id_password1');
+        const icon = this.querySelector('i');
+        if (password.type === 'password') {
+            password.type = 'text';
+            icon.setAttribute('data-feather', 'eye-off');
+        } else {
+            password.type = 'password';
+            icon.setAttribute('data-feather', 'eye');
+        }
+        feather.replace();
+    });
+
+    document.getElementById('togglePassword2').addEventListener('click', function() {
+        const password = document.getElementById('id_password2');
+        const icon = this.querySelector('i');
+        if (password.type === 'password') {
+            password.type = 'text';
+            icon.setAttribute('data-feather', 'eye-off');
+        } else {
+            password.type = 'password';
+            icon.setAttribute('data-feather', 'eye');
+        }
+        feather.replace();
+    });
+
+    // Password strength indicator
+    document.getElementById('id_password1').addEventListener('input', function() {
+        const password = this.value;
+        const progressBar = document.getElementById('passwordStrength');
+        let strength = 0;
+
+        if (password.length >= 8) strength += 25;
+        if (password.match(/[a-z]+/)) strength += 25;
+        if (password.match(/[A-Z]+/)) strength += 25;
+        if (password.match(/[0-9]+/)) strength += 25;
+
+        progressBar.style.width = strength + '%';
+        
+        if (strength <= 25) {
+            progressBar.className = 'progress-bar bg-danger';
+        } else if (strength <= 50) {
+            progressBar.className = 'progress-bar bg-warning';
+        } else if (strength <= 75) {
+            progressBar.className = 'progress-bar bg-info';
+        } else {
+            progressBar.className = 'progress-bar bg-success';
+        }
+    });
+
+    // Initialize Feather icons
+    feather.replace();
+</script>
 {% endblock %}

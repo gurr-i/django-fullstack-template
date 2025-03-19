@@ -1,0 +1,51 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Django stuff
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Media and static files
+media/
+static/
+
+# IDE files
+.vscode/
+.idea/
+
+# Node modules (if using Node.js for frontend)
+node_modules/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Test output
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Other
+*.bak
+*.swp
+*.swo

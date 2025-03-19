@@ -2,7 +2,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
@@ -15,7 +14,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Task, TaskCategory, TaskComment, UserProfile, Notification
-from .forms import TaskForm, TaskCommentForm, UserProfileForm, TaskCategoryForm
+from .forms import TaskForm, TaskCommentForm, UserProfileForm, TaskCategoryForm, CustomUserCreationForm
 from .serializers import (
     TaskSerializer, TaskCategorySerializer, TaskCommentSerializer, 
     UserProfileSerializer, NotificationSerializer
@@ -273,15 +272,16 @@ def profile_view(request, username=None):
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             # Create user profile
             UserProfile.objects.create(user=user)
-            messages.success(request, "Your account has been created! You can now login.")
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}! You can now login.')
             return redirect('login')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     
     return render(request, 'registration/register.html', {'form': form})
 

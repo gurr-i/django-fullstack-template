@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
+from model_utils import FieldTracker
 
 class UserProfile(models.Model):
     """Extended user profile model"""
@@ -57,6 +58,9 @@ class Task(models.Model):
     assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_tasks')
     category = models.ForeignKey(TaskCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name='tasks')
     
+    # Add tracker for monitoring field changes
+    tracker = FieldTracker()
+    
     class Meta:
         ordering = ['-created_at']
     
@@ -97,6 +101,30 @@ class TaskAttachment(models.Model):
     
     def __str__(self):
         return f"Attachment for {self.task.title} by {self.uploaded_by.username}"
+
+
+class Notification(models.Model):
+    """Notification model for task-related notifications"""
+    NOTIFICATION_TYPES = [
+        ('task_assigned', 'Task Assigned'),
+        ('status_update', 'Status Update'),
+        ('due_soon', 'Due Soon'),
+        ('overdue', 'Overdue'),
+        ('comment', 'New Comment'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='notifications')
+    notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.notification_type} for {self.user.username}"
 
 
 class Notification(models.Model):
