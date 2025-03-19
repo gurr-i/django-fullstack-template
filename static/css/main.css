@@ -1,0 +1,346 @@
+/* Main CSS file for the Task Manager application */
+
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --danger-color: #e74c3c;
+    --warning-color: #f39c12;
+    --info-color: #1abc9c;
+    --dark-color: #34495e;
+    --light-color: #ecf0f1;
+    --gray-color: #95a5a6;
+}
+
+/* General styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+    padding-top: 56px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* Dashboard */
+.dashboard-stats {
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+    margin-bottom: 0;
+    color: var(--gray-color);
+}
+
+.stat-card.primary {
+    border-left: 4px solid var(--primary-color);
+}
+
+.stat-card.success {
+    border-left: 4px solid var(--secondary-color);
+}
+
+.stat-card.warning {
+    border-left: 4px solid var(--warning-color);
+}
+
+.stat-card.danger {
+    border-left: 4px solid var(--danger-color);
+}
+
+/* Tasks */
+.task-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.task-card .task-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.task-card .task-meta {
+    color: var(--gray-color);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.task-card .task-description {
+    margin-bottom: 1rem;
+}
+
+.task-card .task-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.task-status {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.task-status.pending {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+.task-status.in-progress {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.task-status.completed {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.task-status.cancelled {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.task-priority {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.task-priority.high {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.task-priority.medium {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+.task-priority.low {
+    background-color: var(--info-color);
+    color: white;
+}
+
+/* Comments */
+.comment-section {
+    margin-top: 2rem;
+}
+
+.comment {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.comment .comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.comment .comment-author {
+    font-weight: 600;
+}
+
+.comment .comment-timestamp {
+    color: var(--gray-color);
+    font-size: 0.9rem;
+}
+
+/* Profiles */
+.profile-header {
+    display: flex;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 1.5rem;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info h2 {
+    margin-bottom: 0.5rem;
+}
+
+.profile-stats {
+    margin-top: 1rem;
+    display: flex;
+}
+
+.profile-stat {
+    margin-right: 1.5rem;
+}
+
+.profile-stat span {
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+/* Forms */
+.form-section {
+    background-color: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.form-section h2 {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .profile-avatar {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .profile-stats {
+        justify-content: center;
+    }
+}
+
+/* Notifications */
+.notification {
+    border-left: 4px solid var(--primary-color);
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.notification.unread {
+    background-color: #e3f2fd;
+}
+
+.notification-title {
+    font-weight: 600;
+}
+
+.notification-meta {
+    font-size: 0.85rem;
+    color: var(--gray-color);
+}
+
+/* Navbar dropdowns */
+.dropdown-notifications {
+    width: 300px;
+    padding: 0;
+}
+
+.dropdown-notifications .dropdown-item {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.dropdown-notifications .dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.notification-counter {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--danger-color);
+    color: white;
+    font-size: 0.7rem;
+    text-align: center;
+    line-height: 18px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/* Error pages */
+.error-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.error-code {
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    font-size: 1.5rem;
+    color: var(--dark-color);
+    margin-bottom: 2rem;
+}

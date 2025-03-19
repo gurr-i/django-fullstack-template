@@ -1,0 +1,43 @@
+<footer class="bg-dark text-white py-4 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>{{ SITE_NAME }}</h5>
+                <p>A comprehensive task management system built with Django.</p>
+                <p>Version: {{ SITE_VERSION }}</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'home' %}" class="text-white">Home</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'task-list' %}" class="text-white">Tasks</a></li>
+                        <li><a href="{% url 'profile' %}" class="text-white">My Profile</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}" class="text-white">Login</a></li>
+                        <li><a href="{% url 'register' %}" class="text-white">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Contact</h5>
+                <address>
+                    <strong>Support:</strong> support@taskmanager.com<br>
+                    <strong>Phone:</strong> +1 (555) 123-4567<br>
+                    <div class="mt-3">
+                        <a href="#" class="me-2 text-white"><i data-feather="github"></i></a>
+                        <a href="#" class="me-2 text-white"><i data-feather="twitter"></i></a>
+                        <a href="#" class="me-2 text-white"><i data-feather="linkedin"></i></a>
+                        <a href="#" class="text-white"><i data-feather="facebook"></i></a>
+                    </div>
+                </address>
+            </div>
+        </div>
+        <hr class="bg-light">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="mb-0">&copy; {% now "Y" %} {{ SITE_NAME }}. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>

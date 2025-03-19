@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ SITE_NAME }} - Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="jumbotron bg-light p-5 rounded">
+            <h1 class="display-4">Welcome to {{ SITE_NAME }}</h1>
+            <p class="lead">A comprehensive task management system to help you stay organized and productive.</p>
+            <hr class="my-4">
+            {% if user.is_authenticated %}
+                <p>Get started by creating a new task or checking your existing tasks.</p>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'task-create' %}" class="btn btn-primary btn-lg">
+                        <i data-feather="plus-circle" class="me-1"></i> Create a New Task
+                    </a>
+                    <a href="{% url 'task-list' %}" class="btn btn-outline-primary btn-lg">
+                        <i data-feather="list" class="me-1"></i> View All Tasks
+                    </a>
+                </div>
+            {% else %}
+                <p>Please sign in to start managing your tasks.</p>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+                        <i data-feather="log-in" class="me-1"></i> Login
+                    </a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg">
+                        <i data-feather="user-plus" class="me-1"></i> Register
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if user.is_authenticated %}
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h2>Your Dashboard</h2>
+    </div>
+</div>
+
+<div class="row mt-3 dashboard-stats">
+    <div class="col-md-3">
+        <div class="stat-card primary">
+            <h3>{{ pending_count }}</h3>
+            <p>Pending Tasks</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card warning">
+            <h3>{{ in_progress_count }}</h3>
+            <p>In Progress</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card success">
+            <h3>{{ completed_count }}</h3>
+            <p>Completed</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card danger">
+            <h3>{{ overdue_tasks|length }}</h3>
+            <p>Overdue Tasks</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Tasks</h5>
+                <a href="{% url 'task-list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                {% if recent_tasks %}
+                    <div class="list-group">
+                        {% for task in recent_tasks %}
+                            <a href="{% url 'task-detail' task.id %}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ task.title }}</h5>
+                                    <small>{{ task.created_at|date:"M d, Y" }}</small>
+                                </div>
+                                <p class="mb-1">{{ task.description|truncatechars:100 }}</p>
+                                <div class="d-flex justify-content-between">
+                                    <small>Status: <span class="badge bg-{{ task.status|lower }}">{{ task.status|title }}</span></small>
+                                    <small>Priority: <span class="badge bg-{{ task.priority|lower }}">{{ task.priority|title }}</span></small>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">You don't have any tasks yet. <a href="{% url 'task-create' %}">Create one</a>?</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Overdue Tasks</h5>
+            </div>
+            <div class="card-body">
+                {% if overdue_tasks %}
+                    <div class="list-group">
+                        {% for task in overdue_tasks %}
+                            <a href="{% url 'task-detail' task.id %}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ task.title }}</h5>
+                                    <small class="text-danger">Due: {{ task.due_date|date:"M d, Y" }}</small>
+                                </div>
+                                <p class="mb-1">{{ task.description|truncatechars:100 }}</p>
+                                <small>Status: <span class="badge bg-{{ task.status|lower }}">{{ task.status|title }}</span></small>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">Great job! You don't have any overdue tasks.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Notifications</h5>
+            </div>
+            <div class="card-body">
+                {% if notifications %}
+                    <div class="list-group">
+                        {% for notification in notifications %}
+                            <a href="{% url 'mark-notification-read' notification.id %}" class="list-group-item list-group-item-action {% if not notification.is_read %}list-group-item-primary{% endif %}">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ notification.notification_type|title }}</h6>
+                                    <small>{{ notification.created_at|timesince }} ago</small>
+                                </div>
+                                <p class="mb-1">{{ notification.message }}</p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">You don't have any recent notifications.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i data-feather="calendar" style="width: 64px; height: 64px; color: #3498db;"></i>
+                <h4 class="mt-3">Task Organization</h4>
+                <p>Create, organize, and prioritize your tasks with an intuitive interface.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i data-feather="users" style="width: 64px; height: 64px; color: #2ecc71;"></i>
+                <h4 class="mt-3">Team Collaboration</h4>
+                <p>Assign tasks to team members and track progress together.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i data-feather="bell" style="width: 64px; height: 64px; color: #f39c12;"></i>
+                <h4 class="mt-3">Notifications</h4>
+                <p>Stay informed with real-time updates on your tasks and deadlines.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3>Why Choose {{ SITE_NAME }}?</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i data-feather="check-circle" class="me-2"></i> Easy to Use</h5>
+                        <p>Our intuitive interface makes task management simple and straightforward.</p>
+                        
+                        <h5><i data-feather="check-circle" class="me-2"></i> Responsive Design</h5>
+                        <p>Access your tasks from any device - desktop, tablet, or mobile.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i data-feather="check-circle" class="me-2"></i> Customizable</h5>
+                        <p>Organize tasks with custom categories and priorities to match your workflow.</p>
+                        
+                        <h5><i data-feather="check-circle" class="me-2"></i> Secure</h5>
+                        <p>Your data is protected with industry-standard security practices.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

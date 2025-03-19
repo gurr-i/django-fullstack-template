@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ SITE_NAME }} - Page Not Found{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <div class="error-code">404</div>
+    <div class="error-message">Oops! The page you're looking for does not exist.</div>
+    <svg width="300" height="200" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" class="mb-4">
+        <path d="M300 220c48.6 0 88-39.4 88-88s-39.4-88-88-88-88 39.4-88 88 39.4 88 88 88z" fill="#f8f9fa"/>
+        <path d="M376 240H224c-4.4 0-8 3.6-8 8v16c0 4.4 3.6 8 8 8h152c4.4 0 8-3.6 8-8v-16c0-4.4-3.6-8-8-8z" fill="#3498db"/>
+        <path d="M100 240h180v40H100c-22.1 0-40-17.9-40-40v-80c0-22.1 17.9-40 40-40h120c22.1 0 40 17.9 40 40v40" stroke="#34495e" stroke-width="10" fill="none"/>
+        <path d="M540 240H360v40h180c22.1 0 40-17.9 40-40v-80c0-22.1-17.9-40-40-40H420c-22.1 0-40 17.9-40 40v40" stroke="#34495e" stroke-width="10" fill="none"/>
+        <circle cx="240" cy="132" r="20" fill="#e74c3c"/>
+        <circle cx="400" cy="132" r="20" fill="#e74c3c"/>
+        <path d="M220 180c20 20 60 20 80 0" stroke="#34495e" stroke-width="10" stroke-linecap="round" fill="none"/>
+    </svg>
+    <p class="mb-4">We can't find the page you're looking for. The page may have been moved, deleted, or never existed.</p>
+    <div>
+        <a href="{% url 'home' %}" class="btn btn-primary btn-lg me-2">
+            <i data-feather="home" class="me-1"></i> Go to Homepage
+        </a>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg">
+            <i data-feather="arrow-left" class="me-1"></i> Go Back
+        </a>
+    </div>
+</div>
+{% endblock %}

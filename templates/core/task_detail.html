@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ SITE_NAME }} - {{ task.title }}{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'task-list' %}">Tasks</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ task.title }}</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'task-update' task.id %}" class="btn btn-warning">
+            <i data-feather="edit" class="me-1"></i> Edit
+        </a>
+        {% if task.created_by == user %}
+            <a href="{% url 'task-delete' task.id %}" class="btn btn-danger ms-2">
+                <i data-feather="trash-2" class="me-1"></i> Delete
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h1>{{ task.title }}</h1>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5 class="card-subtitle mb-2 text-muted">Description</h5>
+                    <p class="card-text">{{ task.description|linebreaks }}</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5 class="card-subtitle mb-2 text-muted">Status Updates</h5>
+                    <div class="btn-group" role="group" aria-label="Task status">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-outline-warning status-update-btn {% if task.status == 'pending' %}active{% endif %}" 
+                                data-task-id="{{ task.id }}" data-status="pending">
+                            Pending
+                        </button>
+                        <button type="button" class="btn btn-outline-primary status-update-btn {% if task.status == 'in_progress' %}active{% endif %}" 
+                                data-task-id="{{ task.id }}" data-status="in_progress">
+                            In Progress
+                        </button>
+                        <button type="button" class="btn btn-outline-success status-update-btn {% if task.status == 'completed' %}active{% endif %}" 
+                                data-task-id="{{ task.id }}" data-status="completed">
+                            Completed
+                        </button>
+                        <button type="button" class="btn btn-outline-danger status-update-btn {% if task.status == 'cancelled' %}active{% endif %}" 
+                                data-task-id="{{ task.id }}" data-status="cancelled">
+                            Cancelled
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h5 class="card-subtitle mb-2 text-muted">Task Details</h5>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th style="width: 150px;">Status</th>
+                                <td>
+                                    <span id="status-badge-{{ task.id }}" class="badge bg-{% if task.status == 'pending' %}warning{% elif task.status == 'in_progress' %}primary{% elif task.status == 'completed' %}success{% elif task.status == 'cancelled' %}danger{% endif %}">
+                                        {{ task.status|title }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Priority</th>
+                                <td>
+                                    <span class="badge bg-{% if task.priority == 'high' %}danger{% elif task.priority == 'medium' %}warning{% elif task.priority == 'low' %}info{% endif %}">
+                                        {{ task.priority|title }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% if task.category %}
+                                <tr>
+                                    <th>Category</th>
+                                    <td>
+                                        <span class="badge bg-{{ task.category.color }}">
+                                            {{ task.category.name }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <th>Created By</th>
+                                <td>
+                                    <a href="{% url 'user-profile' task.created_by.username %}">
+                                        {{ task.created_by.username }}
+                                    </a> 
+                                    on {{ task.created_at|date:"M d, Y h:i A" }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Assigned To</th>
+                                <td>
+                                    {% if task.assigned_to %}
+                                        <a href="{% url 'user-profile' task.assigned_to.username %}">
+                                            {{ task.assigned_to.username }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Not assigned</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% if task.due_date %}
+                                <tr>
+                                    <th>Due Date</th>
+                                    <td class="{% if task.is_overdue %}text-danger{% endif %}">
+                                        {{ task.due_date|date:"M d, Y h:i A" }}
+                                        {% if task.is_overdue %}
+                                            <span class="badge bg-danger ms-2">Overdue</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <th>Last Updated</th>
+                                <td>{{ task.updated_at|date:"M d, Y h:i A" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Comments</h5>
+            </div>
+            <div class="card-body">
+                <div id="comments-container">
+                    {% if task.comments.all %}
+                        {% for comment in task.comments.all %}
+                            <div class="comment">
+                                <div class="comment-header">
+                                    <span class="comment-author">{{ comment.user.username }}</span>
+                                    <span class="comment-timestamp">{{ comment.created_at|date:"M d, Y h:i A" }}</span>
+                                </div>
+                                <div class="comment-content">
+                                    {{ comment.content|linebreaks }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No comments yet. Be the first to comment!</p>
+                    {% endif %}
+                </div>
+                
+                <form method="post" id="comment-form" data-task-id="{{ task.id }}" class="mt-4">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_content" class="form-label">Add a comment</label>
+                        {{ comment_form.content }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i data-feather="message-square" class="me-1"></i> Post Comment
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card sticky-top" style="top: 80px;">
+            <div class="card-header">
+                <h5>Task Timeline</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <i data-feather="plus-circle" class="me-1 text-success"></i>
+                        <strong>Created</strong> 
+                        <span class="text-muted">{{ task.created_at|date:"M d, Y h:i A" }}</span>
+                    </li>
+                    {% if task.comments.all %}
+                        {% for comment in task.comments.all %}
+                            <li class="list-group-item">
+                                <i data-feather="message-square" class="me-1 text-primary"></i>
+                                <strong>{{ comment.user.username }} commented</strong> 
+                                <span class="text-muted">{{ comment.created_at|date:"M d, Y h:i A" }}</span>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        
+        {% if task.attachments.all %}
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5>Attachments</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for attachment in task.attachments.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i data-feather="paperclip" class="me-1"></i>
+                                    {% if attachment.description %}
+                                        {{ attachment.description }}
+                                    {% else %}
+                                        Attachment {{ forloop.counter }}
+                                    {% endif %}
+                                    <div class="text-muted small">
+                                        Uploaded by {{ attachment.uploaded_by.username }}
+                                        on {{ attachment.uploaded_at|date:"M d, Y" }}
+                                    </div>
+                                </div>
+                                <a href="{{ attachment.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                    <i data-feather="download" class="me-1"></i> Download
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

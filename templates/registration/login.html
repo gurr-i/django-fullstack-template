@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ SITE_NAME }} - Login{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title h3">Login</h1>
+            </div>
+            <div class="card-body">
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <p>Your username and password didn't match. Please try again.</p>
+                    </div>
+                {% endif %}
+                
+                {% if next %}
+                    {% if user.is_authenticated %}
+                        <div class="alert alert-warning">
+                            <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <p>Please login to view this page.</p>
+                        </div>
+                    {% endif %}
+                {% endif %}
+                
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" id="id_username" placeholder="Enter your username" autofocus required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" id="id_password" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i data-feather="log-in" class="me-1"></i> Login
+                        </button>
+                    </div>
+                    
+                    <input type="hidden" name="next" value="{{ next }}">
+                </form>
+                
+                <hr>
+                
+                <div class="text-center">
+                    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+                    <p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

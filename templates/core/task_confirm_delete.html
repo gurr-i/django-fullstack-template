@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ SITE_NAME }} - Delete Task{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'task-list' %}">Tasks</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'task-detail' task.id %}">{{ task.title }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Delete</li>
+            </ol>
+        </nav>
+
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h1 class="card-title h5 mb-0">
+                    <i data-feather="alert-triangle" class="me-1"></i> Delete Task
+                </h1>
+            </div>
+            <div class="card-body">
+                <h2 class="h4">Are you sure you want to delete "{{ task.title }}"?</h2>
+                <p>This action cannot be undone. All associated comments and attachments will also be deleted.</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="alert alert-warning">
+                        <h5 class="alert-heading">Task Details</h5>
+                        <p><strong>Title:</strong> {{ task.title }}</p>
+                        <p><strong>Status:</strong> {{ task.status|title }}</p>
+                        <p><strong>Priority:</strong> {{ task.priority|title }}</p>
+                        {% if task.due_date %}
+                            <p><strong>Due Date:</strong> {{ task.due_date|date:"M d, Y h:i A" }}</p>
+                        {% endif %}
+                        {% if task.assigned_to %}
+                            <p><strong>Assigned To:</strong> {{ task.assigned_to.username }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'task-detail' task.id %}" class="btn btn-secondary me-md-2">
+                            <i data-feather="x" class="me-1"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i data-feather="trash-2" class="me-1"></i> Confirm Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
